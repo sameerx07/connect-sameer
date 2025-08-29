@@ -200,7 +200,7 @@ function SocialCard({ social, index }: { social: typeof SOCIAL_LINKS[0]; index: 
 function ImageCarousel({ images, animations, onImageClick }: { images: string[]; animations: any[]; onImageClick: () => void; }) {
   const [index, setIndex] = useState(0);
   useEffect(() => {
-    const interval = setInterval(() => { setIndex(prev => (prev + 1) % images.length); }, 3000);
+    const interval = setInterval(() => { setIndex(prev => (prev + 1) % images.length); }, 2000);
     return () => clearInterval(interval);
   }, [images.length]);
   const currentAnimation = animations[index % animations.length];
@@ -450,7 +450,7 @@ function App() {
             <motion.div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-emerald-100 shadow-lg" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
               <h2 className="text-lg font-semibold mb-3 bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Ready to Start Your Project?</h2>
               <p className="text-gray-600 text-sm mb-4">Let's discuss how I can help bring your ideas to life.</p>
-              <motion.a href="mailto:hello@muhammadsameer.com" className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.a href="mailto:sameersam.s199@gmail.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-ine-flex items-center gap-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Mail className="w-4 h-4" /> Hire Me
               </motion.a>
             </motion.div>
