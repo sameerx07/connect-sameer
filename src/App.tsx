@@ -25,72 +25,13 @@ import {
   Sparkles
 } from 'lucide-react';
 
-/*
-  NOTE: Below is the content of your index.css file.
-  It's included here for context but should remain in its separate file.
-
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-
-  @layer base {
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-      line-height: 1.6;
-    }
-  }
-
-  @layer components {
-    .shadow-3dl {
-      box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
-    }
-    .stats-card {
-      @apply bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-emerald-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1;
-    }
-  }
-
-  @layer utilities {
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  }
-
-  *:focus-visible {
-    outline: 2px solid #10b981;
-    outline-offset: 2px;
-  }
-
-  * {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .gradient-border {
-    border: 4px solid transparent;
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    background-image: linear-gradient(to right, #1a2980, #26d0ce), linear-gradient(to right, #1a2980, #26d0ce);
-  }
-*/
-
-
 // --- Carousel Images ---
-// TODO: Replace these placeholder URLs with the paths to your 5 images.
-// For example: '/images/photo1.jpg', '/images/photo2.jpg', etc.
 const CAROUSEL_IMAGES = [
-  "https://images.pexels.com/photos/4307869/pexels-photo-4307869.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop&crop=face",
-  "https://images.pexels.com/photos/3777943/pexels-photo-3777943.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop&crop=face",
-  "https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop&crop=face",
-  "https://images.pexels.com/photos/5220075/pexels-photo-5220075.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop&crop=face",
-  "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop&crop=face",
+  "images/profile-1.jpg",
+  "images/profile-2.jpg",
+  "images/profile-3.jpg",
+  "images/profile-4.jpg",
+  "images/profile-5.jpg"
 ];
 
 // --- Animation variants for the carousel ---
@@ -116,7 +57,7 @@ const PROFILE_DATA = {
   company: "ATEMZ AI",
   companyUrl: "https://atmez.ai",
   headline: "I build reliable web apps and delightful developer experiences.",
-  portfolioUrl: "PASTE_YOUR_PORTFOLIO_URL",
+  portfolioUrl: "https://sameerdev.online",
   profileImage: "https://images.pexels.com/photos/4307869/pexels-photo-4307869.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop&crop=face",
   animeAvatar: "https://images.pexels.com/photos/4792728/pexels-photo-4792728.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
 };
@@ -152,7 +93,6 @@ function FloatingElements() {
   );
 }
 
-// --- NEW: Carousel Component specifically for the Modal ---
 function ModalImageCarousel({ images, animations }: { images: string[]; animations: any[]; }) {
   const [index, setIndex] = useState(0);
 
@@ -160,7 +100,7 @@ function ModalImageCarousel({ images, animations }: { images: string[]; animatio
     if (images.length > 1) {
       const interval = setInterval(() => {
         setIndex(prev => (prev + 1) % images.length);
-      }, 3000);
+      }, 2000);
       return () => clearInterval(interval);
     }
   }, [images.length]);
@@ -186,7 +126,6 @@ function ModalImageCarousel({ images, animations }: { images: string[]; animatio
   );
 }
 
-// --- MODIFIED: ProfileModal now uses the ModalImageCarousel ---
 function ProfileModal({ isOpen, onClose, carouselImages, name }: {
   isOpen: boolean; onClose: () => void; carouselImages: string[]; name: string;
 }) {
@@ -285,14 +224,133 @@ function ImageCarousel({ images, animations, onImageClick }: { images: string[];
   );
 }
 
+// --- RESTORED: PrivacyPolicy Component ---
 function PrivacyPolicy({ onBack }: { onBack: () => void }) {
-  // Unchanged
-  return <div />;
-}
-
+    return (
+      <motion.div
+        className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-white mb-6 transition-colors px-4 py-2 rounded-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </button>
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-200">
+            <div className="flex items-center gap-3 mb-6">
+              <Shield className="w-8 h-8 text-emerald-600" />
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Privacy Policy</h1>
+            </div>
+            <div className="prose prose-gray max-w-none space-y-6">
+              <section>
+                <h2 className="text-xl font-semibold">Data Collection</h2>
+                <p>When you contact me, I collect your name, email, and project details solely to respond to your inquiry.</p>
+              </section>
+              <section>
+                <h2 className="text-xl font-semibold">Data Usage</h2>
+                <p>Your information is used exclusively for communication regarding potential collaborations.</p>
+              </section>
+              <section>
+                <h2 className="text-xl font-semibold">Data Protection</h2>
+                <p>I implement security measures to protect your information and do not share it with third parties.</p>
+              </section>
+              <div className="mt-8 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+                <p className="text-sm text-emerald-800">
+                  <strong>Last updated:</strong> August 2025
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+  
+// --- RESTORED: ContactForm Component ---
 function ContactForm({ onShowPrivacy }: { onShowPrivacy: () => void }) {
-  // Unchanged
-  return <div />;
+    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '', gdprConsent: false });
+    const [file, setFile] = useState<File | null>(null);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; visible: boolean }>({ message: '', type: 'success', visible: false });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+  
+    useEffect(() => {
+      const savedData = localStorage.getItem(FORM_STORAGE_KEY);
+      if (savedData) { try { setFormData(JSON.parse(savedData)); } catch (error) { console.error('Error loading form data:', error); } }
+    }, []);
+  
+    useEffect(() => {
+      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
+    }, [formData]);
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsSubmitting(true);
+      try {
+        const templateParams = { from_name: formData.name, from_email: formData.email, subject: formData.subject, message: formData.message, to_name: 'Muhammad Sameer' };
+        await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams, 'YOUR_PUBLIC_KEY');
+        setToast({ message: 'Message sent successfully!', type: 'success', visible: true });
+        setFormData({ name: '', email: '', subject: '', message: '', gdprConsent: false });
+        setFile(null);
+        localStorage.removeItem(FORM_STORAGE_KEY);
+      } catch (error) {
+        console.error('EmailJS error:', error);
+        setToast({ message: 'Failed to send message. Please try again.', type: 'error', visible: true });
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+  
+    return (
+      <section className="w-full max-w-2xl mx-auto px-4">
+        <motion.div
+          className="bg-white/90 backdrop-blur-sm rounded-3xl border border-emerald-100 p-6 shadow-xl"
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+        >
+          <div className="text-center mb-6">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center">
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Let's Work Together</h2>
+            </div>
+            <p className="text-gray-600 max-w-md mx-auto">Ready to bring your ideas to life? I specialize in creating modern web and mobile apps.</p>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input type="text" id="name" required value={formData.name} onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500" placeholder="Name *" />
+              <input type="email" id="email" required value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500" placeholder="Email *" />
+            </div>
+            <select id="subject" required value={formData.subject} onChange={(e) => setFormData(p => ({ ...p, subject: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500">
+              <option value="">Select project type</option>
+              <option value="web-development">Web Development</option>
+              <option value="mobile-app">Mobile App (Flutter)</option>
+              <option value="wordpress">WordPress Development</option>
+              <option value="other">Other</option>
+            </select>
+            <textarea id="message" required rows={4} value={formData.message} onChange={(e) => setFormData(p => ({ ...p, message: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500 resize-none" placeholder="Project Details..."></textarea>
+            <div className="relative">
+              <input type="file" id="file" accept=".pdf,.doc,.docx" onChange={(e) => setFile(e.target.files?.[0] || null)} className="hidden" />
+              <label htmlFor="file" className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl hover:border-emerald-500 cursor-pointer">
+                <Upload className="w-5 h-5 text-gray-400" />
+                <span className="text-sm text-gray-600">{file ? file.name : 'Upload file (Optional)'}</span>
+              </label>
+            </div>
+            <div className="flex items-start gap-3">
+              <input type="checkbox" id="gdpr" required checked={formData.gdprConsent} onChange={(e) => setFormData(p => ({ ...p, gdprConsent: e.target.checked }))} className="mt-1 w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" />
+              <label htmlFor="gdpr" className="text-sm text-gray-600">I consent to the <button type="button" onClick={onShowPrivacy} className="text-emerald-600 hover:underline">privacy policy</button>.</label>
+            </div>
+            <motion.button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold py-4 rounded-xl hover:from-violet-600 hover:to-fuchsia-600 transform transition-all disabled:opacity-50" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              {isSubmitting ? 'Sending...' : 'Send Request'}
+            </motion.button>
+          </form>
+        </motion.div>
+        <Toast message={toast.message} type={toast.type} isVisible={toast.visible} onClose={() => setToast(p => ({ ...p, visible: false }))} />
+      </section>
+    );
 }
 
 function StatsCard({ value, label, suffix }: { value: number; label: string; suffix?: string }) {
@@ -335,7 +393,7 @@ function App() {
             <ImageCarousel images={CAROUSEL_IMAGES} animations={carouselAnimations} onImageClick={() => setIsModalOpen(true)} />
           </div>
 
-          <motion.h1 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent mb-2" style={{ backgroundImage: 'linear-gradient(to right, #fc354c, #0abfbc)' }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>{PROFILE_DATA.name}</motion.h1>
+          <motion.h1 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent mb-2" style={{ backgroundImage: 'linear-gradient(to right, #0f0c29, #302b63)' }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>{PROFILE_DATA.name}</motion.h1>
           <motion.p className="text-black font-medium mb-1 md:text-base" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>Freelancer • React • Node • TypeScript • WordPress • Flutter</motion.p>
           <motion.p className="text-gray-500 text-sm mb-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             <a href={PROFILE_DATA.companyUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">{PROFILE_DATA.company}</a>
@@ -407,7 +465,6 @@ function App() {
         </footer>
       </div>
 
-      {/* MODIFIED: Passing the full image array to the modal */}
       <ProfileModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
