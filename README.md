@@ -1,6 +1,6 @@
 # Muhammad Sameer - Professional Link in Bio
 
-A beautifully designed, mobile-first "link in bio" landing page for Muhammad Sameer, freelance software developer.  
+A beautifully designed, mobile-first "link in bio" landing page for **Muhammad Sameer**, freelance software developer.  
 Built with **React, Vite, Tailwind CSS, Framer Motion, and EmailJS**.
 
 ---
@@ -8,35 +8,39 @@ Built with **React, Vite, Tailwind CSS, Framer Motion, and EmailJS**.
 ## ✨ Features
 - 🎨 Modern emerald gradient theme with animated backgrounds  
 - 📱 Mobile-first responsive design  
-- ♿ Accessibility support with ARIA labels & keyboard navigation  
-- 🚀 Fast loading with optimized images  
+- ♿ Full accessibility support with ARIA labels and keyboard navigation  
+- 🚀 Fast loading with optimized images and performance  
 - 💫 Smooth animations with Framer Motion  
-- 📧 Contact form with EmailJS + GDPR compliance  
+- 📧 Contact form with EmailJS integration, file upload, and GDPR compliance  
 - 🔗 Social media integration  
 - 🖼️ Modal profile picture viewer  
+- 🎯 SEO optimized with semantic HTML  
+- 💾 Form data persistence (survives page navigation)  
 - 📄 Privacy policy page with smooth navigation  
-- 💾 Form data persistence (saves progress in localStorage)  
+- ✨ Floating background animations and micro-interactions  
 
 ---
 
-## ⚡ Quick Setup
+## ⚡ Setup Guide
 
-### 1. Install Dependencies
+### 1️⃣ Install Dependencies
 ```bash
-npm install
-2. Configure EmailJS
-Create an account at EmailJS
+- nnpm install
 
-Set up a service, template, and get your public key
+ ### 2️⃣ Configure EmailJS
+- Create an account at EmailJS
 
-Create a .env file at the project root and add your credentials:
+- Set up a service, template, and get your public key
+
+- Create a .env file at the project root and add your credentials:
 
 env
 Copy code
-VITE_EMAILJS_SERVICE_ID=your_service_id
-VITE_EMAILJS_TEMPLATE_ID=your_template_id
-VITE_EMAILJS_PUBLIC_KEY=your_public_key
-3. Development
+ - VITE_EMAILJS_SERVICE_ID=your_service_id
+ - VITE_EMAILJS_TEMPLATE_ID=your_template_id
+- VITE_EMAILJS_PUBLIC_KEY=your_public_key
+
+ ##3️⃣ Development
 bash
 Copy code
 # Start development server
@@ -47,30 +51,34 @@ npm run build
 
 # Preview production build
 npm run preview
-🎨 Customization
-Update profile info in src/App.tsx (PROFILE_DATA object).
 
-Replace social links in SOCIAL_LINKS array.
+## 🎨 Customization
+- ✏️ Update profile info in src/App.tsx (PROFILE_DATA object)
 
-Customize colors & gradients via Tailwind CSS classes.
+- 🔗 Replace social links in SOCIAL_LINKS array
 
-Update images (profile + avatar) in the assets folder.
+- 🎨 Customize colors & gradients via Tailwind CSS
 
-🌐 Deployment
-This app works seamlessly with:
+- 🖼️ Update images (profile + avatar) in the assets folder
 
-Netlify (recommended for forms)
+## 🌐 Deployment
+- This app works seamlessly with:
 
-Vercel
+- 🚀 Netlify (recommended for forms)
 
-GitHub Pages
+- ▲ Vercel
 
-Any static hosting service
+- 📦 GitHub Pages
 
-For Instagram bio, you can use your custom domain or a short link.
+- 🌍 Any static hosting service
 
-📄 License
-MIT License – feel free to customize & use for your personal projects.
+- 💡 For Instagram bio, you can use your custom domain or a short link.
 
-🔗 Website
-👉 https://links.sameerdev.online
+ ## 📄 License
+- MIT License – feel free to customize & use for your personal projects.
+
+## 🔗 Website
+- 👉 https://links.sameerdev.online
+
+
+
