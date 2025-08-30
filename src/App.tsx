@@ -1,3 +1,4 @@
+// App.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, animate } from 'framer-motion';
 import emailjs from '@emailjs/browser';
@@ -74,7 +75,6 @@ const SOCIAL_LINKS = [
 const FORM_STORAGE_KEY = 'contact-form-data';
 
 // --- Reusable Components ---
-
 function FloatingElements() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -226,131 +226,212 @@ function ImageCarousel({ images, animations, onImageClick }: { images: string[];
 
 // --- RESTORED: PrivacyPolicy Component ---
 function PrivacyPolicy({ onBack }: { onBack: () => void }) {
-    return (
-      <motion.div
-        className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-white mb-6 transition-colors px-4 py-2 rounded-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </button>
-          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-200">
-            <div className="flex items-center gap-3 mb-6">
-              <Shield className="w-8 h-8 text-emerald-600" />
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Privacy Policy</h1>
-            </div>
-            <div className="prose prose-gray max-w-none space-y-6">
-              <section>
-                <h2 className="text-xl font-semibold">Data Collection</h2>
-                <p>When you contact me, I collect your name, email, and project details solely to respond to your inquiry.</p>
-              </section>
-              <section>
-                <h2 className="text-xl font-semibold">Data Usage</h2>
-                <p>Your information is used exclusively for communication regarding potential collaborations.</p>
-              </section>
-              <section>
-                <h2 className="text-xl font-semibold">Data Protection</h2>
-                <p>I implement security measures to protect your information and do not share it with third parties.</p>
-              </section>
-              <div className="mt-8 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
-                <p className="text-sm text-emerald-800">
-                  <strong>Last updated:</strong> August 2025
-                </p>
-              </div>
+  return (
+    <motion.div
+      className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-white mb-6 transition-colors px-4 py-2 rounded-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </button>
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-200">
+          <div className="flex items-center gap-3 mb-6">
+            <Shield className="w-8 h-8 text-emerald-600" />
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Privacy Policy</h1>
+          </div>
+          <div className="prose prose-gray max-w-none space-y-6">
+            <section>
+              <h2 className="text-xl font-semibold">Data Collection</h2>
+              <p>When you contact me, I collect your name, email, and project details solely to respond to your inquiry.</p>
+            </section>
+            <section>
+              <h2 className="text-xl font-semibold">Data Usage</h2>
+              <p>Your information is used exclusively for communication regarding potential collaborations.</p>
+            </section>
+            <section>
+              <h2 className="text-xl font-semibold">Data Protection</h2>
+              <p>I implement security measures to protect your information and do not share it with third parties.</p>
+            </section>
+            <div className="mt-8 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+              <p className="text-sm text-emerald-800">
+                <strong>Last updated:</strong> August 2025
+              </p>
             </div>
           </div>
         </div>
-      </motion.div>
-    );
-  }
-  
-// --- RESTORED: ContactForm Component ---
+      </div>
+    </motion.div>
+  );
+}
+
+// sanitize helper available to ContactForm
+const sanitizeForTemplate = (val: unknown): string => {
+  if (val === null || val === undefined) return '';
+  const s = String(val);
+  return s.replace(/{{/g, '{ {').replace(/}}/g, '} }');
+};
+
+// --- RESTORED: ContactForm Component (with EmailJS using Vite env) ---
 function ContactForm({ onShowPrivacy }: { onShowPrivacy: () => void }) {
-    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '', gdprConsent: false });
-    const [file, setFile] = useState<File | null>(null);
-    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; visible: boolean }>({ message: '', type: 'success', visible: false });
-    const [isSubmitting, setIsSubmitting] = useState(false);
-  
-    useEffect(() => {
-      const savedData = localStorage.getItem(FORM_STORAGE_KEY);
-      if (savedData) { try { setFormData(JSON.parse(savedData)); } catch (error) { console.error('Error loading form data:', error); } }
-    }, []);
-  
-    useEffect(() => {
-      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
-    }, [formData]);
-  
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setIsSubmitting(true);
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '', gdprConsent: false });
+  const [file, setFile] = useState<File | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; visible: boolean }>({ message: '', type: 'success', visible: false });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Load saved form from localStorage
+  useEffect(() => {
+    const savedData = localStorage.getItem(FORM_STORAGE_KEY);
+    if (savedData) {
       try {
-        const templateParams = { from_name: formData.name, from_email: formData.email, subject: formData.subject, message: formData.message, to_name: 'Muhammad Sameer' };
-        await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams, 'YOUR_PUBLIC_KEY');
-        setToast({ message: 'Message sent successfully!', type: 'success', visible: true });
-        setFormData({ name: '', email: '', subject: '', message: '', gdprConsent: false });
-        setFile(null);
-        localStorage.removeItem(FORM_STORAGE_KEY);
+        setFormData(JSON.parse(savedData));
       } catch (error) {
-        console.error('EmailJS error:', error);
-        setToast({ message: 'Failed to send message. Please try again.', type: 'error', visible: true });
-      } finally {
-        setIsSubmitting(false);
+        console.error('Error loading form data:', error);
       }
-    };
-  
-    return (
-      <section className="w-full max-w-2xl mx-auto px-4">
-        <motion.div
-          className="bg-white/90 backdrop-blur-sm rounded-3xl border border-emerald-100 p-6 shadow-xl"
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-        >
-          <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Let's Work Together</h2>
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
+  }, [formData]);
+
+  // Initialize EmailJS with public key from env
+  useEffect(() => {
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    if (!publicKey) {
+      // eslint-disable-next-line no-console
+      console.warn('[EmailJS] VITE_EMAILJS_PUBLIC_KEY not set in environment. Email sending will fail without it.');
+      return;
+    }
+    try {
+      emailjs.init(publicKey);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('EmailJS init error:', err);
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Read env values (Vite requires prefix VITE_)
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY; // we already init with this
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error('[EmailJS] Missing env values:', { serviceId, templateId, publicKey });
+      setToast({ message: 'Email service not configured. Please set environment variables.', type: 'error', visible: true });
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      // Build a safe payload matching the universal template keys
+      const SITE_NAME =
+        typeof window !== 'undefined' && /link/i.test(window.location.hostname)
+          ? 'links'
+          : 'portfolio';
+
+      const templateParams = {
+        from_site: sanitizeForTemplate(SITE_NAME),
+        source_url: sanitizeForTemplate(typeof window !== 'undefined' ? window.location.href : ''),
+        name: sanitizeForTemplate(formData.name || ''),
+        email: sanitizeForTemplate(formData.email || ''),
+        subject: sanitizeForTemplate(formData.subject || ''),
+        project_type: '', // in this app ContactForm we store project type in subject select; leave blank or map if you add dropdown
+        message: sanitizeForTemplate(formData.message || ''),
+        file_attached: sanitizeForTemplate(file?.name || ''),
+        gdpr_consent: sanitizeForTemplate(formData.gdprConsent ? 'Yes' : 'No')
+      };
+
+      // log payload to debug template issues (copy this if EmailJS errors)
+      // eslint-disable-next-line no-console
+      console.log('EmailJS payload ->', templateParams);
+
+      // basic client-side required fields
+      if (!templateParams.name.trim() || !templateParams.email.trim() || !templateParams.message.trim()) {
+        setToast({ message: 'Please fill Name, Email and Message fields.', type: 'error', visible: true });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // send with EmailJS
+      // emailjs.send(serviceId, templateId, templateParams) is fine because we called init(publicKey)
+      await emailjs.send(serviceId as string, templateId as string, templateParams);
+
+      setToast({ message: 'Message sent successfully!', type: 'success', visible: true });
+      setFormData({ name: '', email: '', subject: '', message: '', gdprConsent: false });
+      setFile(null);
+      localStorage.removeItem(FORM_STORAGE_KEY);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('EmailJS error:', error);
+      setToast({ message: 'Failed to send message. Please try again later.', type: 'error', visible: true });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section className="w-full max-w-2xl mx-auto px-4">
+      <motion.div
+        className="bg-white/90 backdrop-blur-sm rounded-3xl border border-emerald-100 p-6 shadow-xl"
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+      >
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center">
+              <Zap className="w-6 h-6 text-white" />
             </div>
-            <p className="text-gray-600 max-w-md mx-auto">Ready to bring your ideas to life? I specialize in creating modern web and mobile apps.</p>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Let's Work Together</h2>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" id="name" required value={formData.name} onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500" placeholder="Name *" />
-              <input type="email" id="email" required value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500" placeholder="Email *" />
-            </div>
-            <select id="subject" required value={formData.subject} onChange={(e) => setFormData(p => ({ ...p, subject: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500">
-              <option value="">Select project type</option>
-              <option value="web-development">Web Development</option>
-              <option value="mobile-app">Mobile App (Flutter)</option>
-              <option value="wordpress">WordPress Development</option>
-              <option value="other">Other</option>
-            </select>
-            <textarea id="message" required rows={4} value={formData.message} onChange={(e) => setFormData(p => ({ ...p, message: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500 resize-none" placeholder="Project Details..."></textarea>
-            <div className="relative">
-              <input type="file" id="file" accept=".pdf,.doc,.docx" onChange={(e) => setFile(e.target.files?.[0] || null)} className="hidden" />
-              <label htmlFor="file" className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl hover:border-emerald-500 cursor-pointer">
-                <Upload className="w-5 h-5 text-gray-400" />
-                <span className="text-sm text-gray-600">{file ? file.name : 'Upload file (Optional)'}</span>
-              </label>
-            </div>
-            <div className="flex items-start gap-3">
-              <input type="checkbox" id="gdpr" required checked={formData.gdprConsent} onChange={(e) => setFormData(p => ({ ...p, gdprConsent: e.target.checked }))} className="mt-1 w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" />
-              <label htmlFor="gdpr" className="text-sm text-gray-600">I consent to the <button type="button" onClick={onShowPrivacy} className="text-emerald-600 hover:underline">privacy policy</button>.</label>
-            </div>
-            <motion.button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold py-4 rounded-xl hover:from-violet-600 hover:to-fuchsia-600 transform transition-all disabled:opacity-50" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              {isSubmitting ? 'Sending...' : 'Send Request'}
-            </motion.button>
-          </form>
-        </motion.div>
-        <Toast message={toast.message} type={toast.type} isVisible={toast.visible} onClose={() => setToast(p => ({ ...p, visible: false }))} />
-      </section>
-    );
+          <p className="text-gray-600 max-w-md mx-auto">Ready to bring your ideas to life? I specialize in creating modern web and mobile apps.</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" id="name" required value={formData.name} onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500" placeholder="Name *" />
+            <input type="email" id="email" required value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500" placeholder="Email *" />
+          </div>
+
+          <select id="subject" required value={formData.subject} onChange={(e) => setFormData(p => ({ ...p, subject: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500">
+            <option value="">Select project type</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Mobile App (Flutter)">Mobile App (Flutter)</option>
+            <option value="WordPress Development">WordPress Development</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <textarea id="message" required rows={4} value={formData.message} onChange={(e) => setFormData(p => ({ ...p, message: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500 resize-none" placeholder="Project Details..."></textarea>
+
+          <div className="relative">
+            <input type="file" id="file" accept=".pdf,.doc,.docx" onChange={(e) => setFile(e.target.files?.[0] || null)} className="hidden" />
+            <label htmlFor="file" className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl hover:border-emerald-500 cursor-pointer">
+              <Upload className="w-5 h-5 text-gray-400" />
+              <span className="text-sm text-gray-600">{file ? file.name : 'Upload file (Optional)'}</span>
+            </label>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <input type="checkbox" id="gdpr" required checked={formData.gdprConsent} onChange={(e) => setFormData(p => ({ ...p, gdprConsent: e.target.checked }))} className="mt-1 w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" />
+            <label htmlFor="gdpr" className="text-sm text-gray-600">I consent to the <button type="button" onClick={onShowPrivacy} className="text-emerald-600 hover:underline">privacy policy</button>.</label>
+          </div>
+
+          <motion.button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold py-4 rounded-xl hover:from-violet-600 hover:to-fuchsia-600 transform transition-all disabled:opacity-50" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            {isSubmitting ? 'Sending...' : 'Send Request'}
+          </motion.button>
+        </form>
+      </motion.div>
+
+      <Toast message={toast.message} type={toast.type} isVisible={toast.visible} onClose={() => setToast(p => ({ ...p, visible: false }))} />
+    </section>
+  );
 }
 
 function StatsCard({ value, label, suffix }: { value: number; label: string; suffix?: string }) {
@@ -371,7 +452,6 @@ function StatsCard({ value, label, suffix }: { value: number; label: string; suf
 }
 
 // --- Main App Component ---
-
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
